@@ -15,6 +15,23 @@ for (var h = 7; h <= 19; h += 1) {
   HOURS.push(pad2(h) + ":00");
 }
 
+var LLEIDA_HOLIDAYS = {
+  "2026-01-01": "Any nou",
+  "2026-01-06": "Reis",
+  "2026-04-03": "Divendres Sant",
+  "2026-04-06": "Dilluns de Pasqua",
+  "2026-05-01": "Festa del Treball",
+  "2026-05-11": "Sant Anastasi",
+  "2026-06-24": "Sant Joan",
+  "2026-08-15": "L'Assumpcio",
+  "2026-09-11": "Diada Nacional",
+  "2026-09-29": "Sant Miquel",
+  "2026-10-12": "Dia de la Hispanitat",
+  "2026-12-08": "La Immaculada",
+  "2026-12-25": "Nadal",
+  "2026-12-26": "Sant Esteve"
+};
+
 var STORE_KEY = "agenda-ipad-v2";
 var LEGACY_STORE_KEY = "agenda-ipad-v1";
 var HANDWRITING_DB = "agenda-ipad-data";
@@ -443,18 +460,23 @@ function renderWeek() {
   target.innerHTML = "";
 
   var dates = weekDates(activeDate);
+  byId("weekTitle").textContent = "Setmana del " +
+    formatDate(parseISO(dates[0]), { day: "numeric", month: "short" }) +
+    " al " + formatDate(parseISO(dates[6]), { day: "numeric", month: "short" });
   for (var i = 0; i < dates.length; i += 1) {
     var isoDate = dates[i];
     var day = getDayForDisplay(isoDate);
     var date = parseISO(isoDate);
+    var calendarInfo = getCalendarDayInfo(isoDate);
     var card = document.createElement("article");
     card.className = "day-card";
+    applyCalendarDayClasses(card, calendarInfo);
     card.innerHTML =
-      "<header><h2>" +
+      '<header><div class="day-heading-copy"><h2>' +
       escapeHTML(formatDate(date, { weekday: "long" })) +
       "</h2><p>" +
       escapeHTML(formatDate(date, { day: "2-digit", month: "short" })) +
-      "</p></header>" +
+      "</p></div>" + renderCalendarLabel(calendarInfo) + "</header>" +
       weekSection("Imperatives", day.imperatives) +
       weekSection("Importants", day.importants) +
       weekSection("Seguiments", day.followups) +
@@ -486,11 +508,13 @@ function renderMonth() {
     date.setDate(firstGridDay.getDate() + i);
     var isoDate = toISODate(date);
     var day = getDayForDisplay(isoDate);
+    var calendarInfo = getCalendarDayInfo(isoDate);
     var openTasks = countOpenTasks(day);
     var topTasks = getTopTasks(day, 3);
     var cell = document.createElement("button");
 
     cell.className = "month-day";
+    applyCalendarDayClasses(cell, calendarInfo);
     cell.type = "button";
     if (date.getMonth() !== month) {
       cell.className += " outside-month";
@@ -502,7 +526,7 @@ function renderMonth() {
     cell.innerHTML =
       '<span class="month-day-number">' +
       date.getDate() +
-      "</span><strong>" +
+      "</span>" + renderHolidayName(calendarInfo) + "<strong>" +
       openTasks +
       " pendents</strong><ul>" +
       renderMonthTasks(topTasks) +
@@ -513,6 +537,40 @@ function renderMonth() {
     cell.addEventListener("click", createDateViewHandler(isoDate));
     target.appendChild(cell);
   }
+}
+
+function getCalendarDayInfo(isoDate) {
+  var date = parseISO(isoDate);
+  return {
+    isWeekend: date.getDay() === 0 || date.getDay() === 6,
+    holidayName: LLEIDA_HOLIDAYS[isoDate] || ""
+  };
+}
+
+function applyCalendarDayClasses(element, calendarInfo) {
+  if (calendarInfo.isWeekend) {
+    element.className += " weekend-day";
+  }
+  if (calendarInfo.holidayName) {
+    element.className += " holiday-day";
+  }
+}
+
+function renderCalendarLabel(calendarInfo) {
+  if (calendarInfo.holidayName) {
+    return '<span class="calendar-day-label holiday-label">' + escapeHTML(calendarInfo.holidayName) + "</span>";
+  }
+  if (calendarInfo.isWeekend) {
+    return '<span class="calendar-day-label weekend-label">Cap de setmana</span>';
+  }
+  return "";
+}
+
+function renderHolidayName(calendarInfo) {
+  if (!calendarInfo.holidayName) {
+    return "";
+  }
+  return '<em class="holiday-name">' + escapeHTML(calendarInfo.holidayName) + "</em>";
 }
 
 function renderMonthTasks(tasks) {

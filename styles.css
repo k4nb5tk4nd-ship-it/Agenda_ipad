@@ -55,14 +55,14 @@ button {
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: flex-start;
+  gap: 0;
   padding: 10px 0 18px;
 }
 
 .identity {
   min-width: 220px;
-  flex: 1 1 320px;
+  flex: 0 1 auto;
 }
 
 .identity h1 {
@@ -99,9 +99,9 @@ button {
 .controls {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  flex: 0 1 760px;
+  flex: 1 1 auto;
   gap: 12px;
 }
 
@@ -549,6 +549,7 @@ button {
   overflow: auto;
 }
 
+.calendar-view-heading,
 .month-heading {
   display: flex;
   align-items: end;
@@ -557,11 +558,51 @@ button {
   padding: 4px 2px 12px;
 }
 
+.calendar-view-heading h2,
 .month-heading h2 {
   margin: 0;
   font-size: 24px;
   line-height: 1.1;
   text-transform: capitalize;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.weekend-swatch {
+  border-color: #8bb8e8;
+  background: #eaf4ff;
+}
+
+.holiday-swatch {
+  border-color: #e47a88;
+  background: #ffe9ed;
+}
+
+.month-heading {
+  min-height: 48px;
 }
 
 .month-heading span {
@@ -591,6 +632,11 @@ button {
   font-size: 12px;
   font-weight: 900;
   text-align: center;
+}
+
+.month-weekdays span:nth-child(6),
+.month-weekdays span:nth-child(7) {
+  color: #3978b7;
 }
 
 .month-day {
@@ -656,6 +702,40 @@ button {
   background: linear-gradient(180deg, rgba(216, 243, 239, 0.96), rgba(255, 255, 255, 0.92));
 }
 
+.month-day.weekend-day,
+.day-card.weekend-day {
+  border-color: rgba(91, 145, 201, 0.48);
+  background: linear-gradient(180deg, rgba(234, 244, 255, 0.98), rgba(248, 252, 255, 0.9));
+}
+
+.month-day.weekend-day .month-day-number {
+  background: #dceeff;
+  color: #245f99;
+}
+
+.month-day.holiday-day,
+.day-card.holiday-day {
+  border-color: rgba(225, 91, 100, 0.62);
+  background: linear-gradient(180deg, rgba(255, 233, 237, 0.98), rgba(255, 248, 249, 0.92));
+}
+
+.month-day.holiday-day .month-day-number {
+  background: #f8cfd5;
+  color: #a32f41;
+}
+
+.holiday-name {
+  display: block;
+  min-height: 26px;
+  margin-top: 6px;
+  overflow: hidden;
+  color: #a32f41;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
 .day-card {
   min-height: 430px;
   box-shadow: none;
@@ -664,8 +744,35 @@ button {
 }
 
 .day-card header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
   border-bottom: 1px solid var(--line);
   padding: 10px;
+}
+
+.calendar-day-label {
+  max-width: 88px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.15;
+  text-align: right;
+}
+
+.weekend-label {
+  border-color: #a8caec;
+  background: #eaf4ff;
+  color: #245f99;
+}
+
+.holiday-label {
+  border-color: #eda3ad;
+  background: #ffe9ed;
+  color: #a32f41;
 }
 
 .day-card h2,
@@ -847,6 +954,64 @@ button {
 
   .schedule-list {
     max-height: 420px;
+  }
+}
+
+@media (min-width: 681px) and (max-width: 840px) {
+  .planner-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(250px, 0.85fr);
+    grid-template-areas:
+      "main schedule"
+      "bottom bottom";
+    align-items: stretch;
+  }
+
+  .main-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .column-panel {
+    min-height: 210px;
+  }
+
+  .column-panel[data-list="followups"],
+  .column-panel[data-list="contacts"] {
+    min-height: 170px;
+  }
+
+  .panel-heading {
+    padding: 10px;
+  }
+
+  .panel-heading h2 {
+    font-size: 14px;
+  }
+
+  .task-list {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .task-card {
+    grid-template-columns: 24px minmax(0, 1fr) 28px;
+    gap: 6px;
+    padding: 7px;
+  }
+
+  .schedule-list {
+    max-height: 724px;
+  }
+
+  .schedule-slot {
+    grid-template-columns: 48px minmax(0, 1fr);
+    min-height: 52px;
+    gap: 6px;
+    padding: 7px 8px;
+  }
+
+  .bottom-board {
+    grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.75fr);
   }
 }
 

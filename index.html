@@ -16,7 +16,7 @@
     <main class="app-shell">
       <header class="topbar">
         <section class="identity" aria-label="Capcalera">
-          <p class="eyebrow">Agenda iPad <span class="version-badge">v3.1</span></p>
+          <p class="eyebrow">Agenda iPad <span class="version-badge">v3.3</span></p>
           <h1>Planificador diari, setmanal i mensual</h1>
         </section>
         <section class="controls" aria-label="Controls de planificacio">
@@ -134,13 +134,23 @@
       </section>
 
       <section id="weeklyPlanner" class="weekly-board hidden" aria-label="Agenda setmanal">
+        <div class="calendar-view-heading">
+          <h2 id="weekTitle">Setmana</h2>
+          <div class="calendar-legend" aria-label="Llegenda del calendari">
+            <span><i class="legend-swatch weekend-swatch"></i>Cap de setmana</span>
+            <span><i class="legend-swatch holiday-swatch"></i>Festiu Lleida 2026</span>
+          </div>
+        </div>
         <div id="weekGrid" class="week-grid"></div>
       </section>
 
       <section id="monthlyPlanner" class="monthly-board hidden" aria-label="Agenda mensual">
         <div class="month-heading">
           <h2 id="monthTitle">Mes</h2>
-          <span>Planificacio mensual</span>
+          <div class="calendar-legend" aria-label="Llegenda del calendari">
+            <span><i class="legend-swatch weekend-swatch"></i>Cap de setmana</span>
+            <span><i class="legend-swatch holiday-swatch"></i>Festiu Lleida 2026</span>
+          </div>
         </div>
         <div class="month-scroll">
           <div class="month-weekdays" aria-hidden="true">

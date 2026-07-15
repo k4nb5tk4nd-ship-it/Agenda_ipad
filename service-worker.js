@@ -1,4 +1,4 @@
-var CACHE_NAME = "agenda-ipad-v3-1";
+var CACHE_NAME = "agenda-ipad-v3-3";
 var APP_FILES = [
   "./",
   "./index.html",
