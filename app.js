@@ -75,6 +75,7 @@ function cacheElements() {
   els.taskTemplate = document.getElementById("taskTemplate");
   els.handwritingCanvas = document.getElementById("handwritingCanvas");
   els.handwritingContext = els.handwritingCanvas ? els.handwritingCanvas.getContext("2d") : null;
+  els.handwritingShell = document.getElementById("handwritingShell");
   els.saveStatus = document.getElementById("saveStatus");
   els.importFile = document.getElementById("importFile");
   els.installOverlay = document.getElementById("installOverlay");
@@ -87,6 +88,11 @@ function bindEvents() {
 
   byId("nextDay").addEventListener("click", function () {
     shiftDay(1);
+  });
+
+  byId("todayButton").addEventListener("click", function () {
+    activeDate = toISODate(new Date());
+    render();
   });
 
   els.dateInput.addEventListener("change", function () {
@@ -135,6 +141,24 @@ function bindEvents() {
     });
   });
 
+  byId("openHandwriting").addEventListener("click", function () {
+    if (!els.handwritingShell.classList.contains("expanded")) {
+      openHandwritingEditor();
+    }
+  });
+
+  byId("closeHandwriting").addEventListener("click", closeHandwritingEditor);
+  els.handwritingShell.addEventListener("click", function (event) {
+    if (event.target === els.handwritingShell) {
+      closeHandwritingEditor();
+    }
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && els.handwritingShell.classList.contains("expanded")) {
+      closeHandwritingEditor();
+    }
+  });
+
   byId("exportData").addEventListener("click", exportBackup);
   byId("importData").addEventListener("click", function () {
     els.importFile.click();
@@ -161,6 +185,18 @@ function bindEvents() {
       saveHandwritingTimer = window.setTimeout(renderHandwriting, 150);
     }
   });
+}
+
+function openHandwritingEditor() {
+  els.handwritingShell.classList.add("expanded");
+  document.body.classList.add("modal-open");
+  window.setTimeout(renderHandwriting, 40);
+}
+
+function closeHandwritingEditor() {
+  els.handwritingShell.classList.remove("expanded");
+  document.body.classList.remove("modal-open");
+  window.setTimeout(renderHandwriting, 40);
 }
 
 function handleAddTask(event) {
