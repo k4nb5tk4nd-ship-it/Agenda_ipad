@@ -1088,6 +1088,8 @@ function showInstallGuide() {
   var message = "";
   if (installed) {
     message = "L'agenda ja esta oberta en mode aplicacio.";
+  } else if (window.AGENDA_STANDALONE) {
+    message = "Aquesta versio HTML es pot afegir a la pantalla d'inici, pero el funcionament fora de linia no esta garantit. Per tenir mode offline cal utilitzar el paquet PWA complet.";
   } else if (window.location.protocol === "file:") {
     message = "Aquesta copia oberta com a fitxer serveix per provar-la, pero no es pot instal·lar de forma fiable. Primer cal publicar la carpeta en un allotjament HTTPS.";
   } else if (!window.isSecureContext) {
@@ -1104,6 +1106,9 @@ function hideInstallGuide() {
 }
 
 function registerServiceWorker() {
+  if (window.AGENDA_STANDALONE) {
+    return;
+  }
   if (!("serviceWorker" in navigator)) {
     return;
   }
