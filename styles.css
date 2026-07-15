@@ -1060,6 +1060,13 @@ button {
     gap: 9px;
   }
 
+  .schedule-board {
+    height: 365px;
+    min-height: 365px;
+    max-height: 365px;
+    align-self: start;
+  }
+
   .priority-board .column-panel {
     height: 178px;
     min-height: 178px;
@@ -1178,14 +1185,21 @@ button {
   }
 
   .schedule-slot {
+    flex: 0 0 52px;
     grid-template-columns: 48px minmax(0, 1fr);
+    height: 52px;
     min-height: 52px;
     gap: 6px;
     padding: 7px 8px;
   }
 
   .schedule-list {
+    height: 0;
+    min-height: 0;
+    max-height: none;
+    flex: 1 1 0;
     overflow-y: scroll;
+    overflow-x: hidden;
     overscroll-behavior: contain;
     scrollbar-color: rgba(15, 118, 110, 0.62) rgba(216, 243, 239, 0.72);
     scrollbar-gutter: stable;
