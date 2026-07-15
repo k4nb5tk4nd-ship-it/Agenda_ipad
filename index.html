@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Agenda" />
+    <title>Agenda diaria, setmanal i mensual</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <section class="identity" aria-label="Capcalera">
+          <p class="eyebrow">Agenda iPad <span class="version-badge">v3.1</span></p>
+          <h1>Planificador diari, setmanal i mensual</h1>
+        </section>
+        <section class="controls" aria-label="Controls de planificacio">
+          <div class="date-control">
+            <button class="icon-button" id="prevDay" type="button" aria-label="Dia anterior">&lt;</button>
+            <input id="agendaDate" type="date" />
+            <button class="icon-button" id="nextDay" type="button" aria-label="Dia seguent">&gt;</button>
+          </div>
+          <div class="view-switch" role="tablist" aria-label="Vista">
+            <button id="dayView" class="switch-button active" type="button" role="tab" aria-selected="true">Dia</button>
+            <button id="weekView" class="switch-button" type="button" role="tab" aria-selected="false">Setmana</button>
+            <button id="monthView" class="switch-button" type="button" role="tab" aria-selected="false">Mes</button>
+          </div>
+          <div class="data-tools" aria-label="Dades i instal·lacio">
+            <button id="exportData" class="tool-button" type="button">Copia</button>
+            <button id="importData" class="tool-button" type="button">Restaurar</button>
+            <button id="installApp" class="tool-button primary" type="button">Instal·lar</button>
+            <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json" />
+          </div>
+          <span id="saveStatus" class="save-status" aria-live="polite">Preparant dades...</span>
+        </section>
+      </header>
+
+      <section class="summary-strip" aria-label="Resum setmanal">
+        <article class="metric">
+          <span id="todayName">Avui</span>
+          <strong id="todayDate">--</strong>
+        </article>
+        <article class="metric">
+          <span>Pendents</span>
+          <strong id="openTasks">0</strong>
+        </article>
+        <article class="metric">
+          <span>Valoracio</span>
+          <strong id="ratingSummary">0/5</strong>
+        </article>
+        <article class="metric">
+          <span>Logro</span>
+          <strong id="achievementSummary">Sense definir</strong>
+        </article>
+      </section>
+
+      <section id="dailyPlanner" class="planner-grid" aria-label="Agenda diaria">
+        <section class="main-board">
+          <article class="column-panel" data-list="imperatives">
+            <div class="panel-heading">
+              <h2>Activitats imperatives</h2>
+              <button class="add-button" type="button" data-add="imperatives" aria-label="Afegir activitat imperativa">+</button>
+            </div>
+            <div class="task-list" id="imperativesList"></div>
+          </article>
+
+          <article class="column-panel" data-list="importants">
+            <div class="panel-heading">
+              <h2>Activitats importants</h2>
+              <button class="add-button" type="button" data-add="importants" aria-label="Afegir activitat important">+</button>
+            </div>
+            <div class="task-list" id="importantsList"></div>
+          </article>
+
+          <article class="column-panel" data-list="followups">
+            <div class="panel-heading">
+              <h2>Seguiments</h2>
+              <button class="add-button" type="button" data-add="followups" aria-label="Afegir seguiment">+</button>
+            </div>
+            <div class="task-list" id="followupsList"></div>
+          </article>
+
+          <article class="column-panel" data-list="contacts">
+            <div class="panel-heading">
+              <h2>Contactes</h2>
+              <button class="add-button" type="button" data-add="contacts" aria-label="Afegir contacte">+</button>
+            </div>
+            <div class="task-list" id="contactsList"></div>
+          </article>
+        </section>
+
+        <aside class="schedule-board" aria-label="Horari laboral">
+          <div class="panel-heading">
+            <h2>Horari laboral</h2>
+            <span>Per hores</span>
+          </div>
+          <div id="scheduleList" class="schedule-list"></div>
+        </aside>
+
+        <section class="bottom-board" aria-label="Comunicacions i valoracio">
+          <article class="notes-panel communications">
+            <div class="panel-heading">
+              <h2>Comunicacions</h2>
+            </div>
+            <textarea id="communications" class="scribble-field" inputmode="text" autocapitalize="sentences" spellcheck="true" placeholder="Missatges, decisions, avisos o informacio per compartir..."></textarea>
+          </article>
+
+          <article class="notes-panel results">
+            <div class="panel-heading">
+              <h2>Valoracio i logro</h2>
+            </div>
+            <label class="rating-label" for="rating">Valoracio del dia</label>
+            <input id="rating" type="range" min="0" max="5" step="1" />
+            <div class="rating-output"><span id="ratingValue">0</span>/5</div>
+            <label class="rating-label" for="achievement">Logro principal</label>
+            <textarea id="achievement" class="scribble-field" inputmode="text" autocapitalize="sentences" spellcheck="true" placeholder="Que has aconseguit avui?"></textarea>
+          </article>
+
+          <article class="notes-panel handwriting">
+            <div class="panel-heading">
+              <h2>Nota manuscrita</h2>
+              <button id="clearHandwriting" class="clear-button" type="button">Netejar</button>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="handwritingCanvas" aria-label="Espai per escriure amb Apple Pencil"></canvas>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section id="weeklyPlanner" class="weekly-board hidden" aria-label="Agenda setmanal">
+        <div id="weekGrid" class="week-grid"></div>
+      </section>
+
+      <section id="monthlyPlanner" class="monthly-board hidden" aria-label="Agenda mensual">
+        <div class="month-heading">
+          <h2 id="monthTitle">Mes</h2>
+          <span>Planificacio mensual</span>
+        </div>
+        <div class="month-scroll">
+          <div class="month-weekdays" aria-hidden="true">
+            <span>Dilluns</span>
+            <span>Dimarts</span>
+            <span>Dimecres</span>
+            <span>Dijous</span>
+            <span>Divendres</span>
+            <span>Dissabte</span>
+            <span>Diumenge</span>
+          </div>
+          <div id="monthGrid" class="month-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="installOverlay" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+      <section class="install-dialog">
+        <div class="panel-heading">
+          <h2 id="installTitle">Instal·lar a l'iPad</h2>
+          <button id="closeInstall" class="delete-button" type="button" aria-label="Tancar">x</button>
+        </div>
+        <div class="install-content">
+          <p id="installMessage"></p>
+          <ol>
+            <li>Obre l'adreca HTTPS de l'agenda amb Safari a l'iPad.</li>
+            <li>Toca el boto Compartir.</li>
+            <li>Selecciona Afegir a la pantalla d'inici.</li>
+            <li>Obre Agenda des de la nova icona.</li>
+          </ol>
+          <p class="install-note">Abans de canviar de dispositiu, utilitza Copia per descarregar una copia de seguretat.</p>
+        </div>
+      </section>
+    </div>
+
+    <template id="taskTemplate">
+      <article class="task-card">
+        <label class="check-wrap">
+          <input type="checkbox" />
+          <span></span>
+        </label>
+        <textarea class="scribble-field" inputmode="text" autocapitalize="sentences" spellcheck="true" rows="2"></textarea>
+        <button class="delete-button" type="button" aria-label="Eliminar">x</button>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+AGENDA IPAD - INSTAL.LACIO RECOMANADA
+
+El pendrive serveix per transportar els fitxers, pero obrir index.html directament
+no ofereix una instal.lacio completa ni funcionament offline fiable.
+
+1. Descomprimeix agenda-ipad-v3.zip a l'ordinador.
+2. Publica el contingut de la carpeta en un allotjament web amb HTTPS.
+   Pots utilitzar un servei d'allotjament estatic com Netlify Drop, GitHub Pages
+   o el servidor web de la teva empresa.
+3. Obre l'adreca HTTPS resultant amb Safari a l'iPad.
+4. Toca Compartir.
+5. Toca Afegir a la pantalla d'inici.
+6. Obre Agenda des de la icona nova.
+
+Un cop oberta una vegada amb connexio, la versio 3 pot funcionar fora de linia.
+
+COPIES DE SEGURETAT
+
+- Dins l'agenda, toca Copia per descarregar totes les dades i manuscrits.
+- Guarda el fitxer JSON a Fitxers, iCloud Drive o un pendrive.
+- Per recuperar-lo, toca Restaurar i selecciona el fitxer JSON.
+
+ACTUALITZACIONS
+
+Quan publiquis una versio nova, substitueix tots els fitxers de l'allotjament.
+Obre l'agenda amb connexio perque descarregui la versio actualitzada.
